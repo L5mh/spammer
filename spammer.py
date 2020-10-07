@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -191,8 +192,7 @@ def start_sms_spam(phone):
         password = name + choice("123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")
         email = name + "@gmail.com"
     phone9 = phone[1:]
-    ua = UserAgent(use_cache_server=False)
-    user_agent = ua.random
+    user_agent = UserAgent().random
     while True:
         try:
             formatted_phone = format_phone(phone, "+# (###) ###-##-##")
