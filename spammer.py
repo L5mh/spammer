@@ -997,7 +997,7 @@ def format_phone(phone, phone_mask):
 
 
 def check_version():
-    current_version = "2.1"
+    current_version = "2.2"
     version = get("https://raw.githubusercontent.com/cludeex/spammer/master/version.txt").text
     if float(current_version) < float(version):
         print()
