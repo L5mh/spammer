@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from os import name, system
 from random import choice, randint
+from sys import argv
 from time import sleep
 from colorama import Fore, Style
 from fake_useragent import UserAgent
@@ -21,34 +22,37 @@ def banner():
 
 
 def main():
-    banner()
-    print("[1] СМС СПАМЕР.")
-    print("[2] ОБНОВИТЬ СПАМЕР.")
-    print("[3] ВЫХОД.")
-    print()
-    number = input(Style.BRIGHT + Fore.BLUE + "Введите номер пункта: " + Style.RESET_ALL)
-    if int(number) in (1, 2, 3):
-        try:
-            get("http://google.com")
-        except ConnectionError:
-            print()
-            print(Style.BRIGHT + Fore.RED + "[*] Нет подключения к интернету" + Style.RESET_ALL)
+    try:
+        phone = argv[1]
+        start_sms_spam(phone)
+    except IndexError:
+        banner()
+        print("[1] СМС СПАМЕР.")
+        print("[2] ОБНОВИТЬ СПАМЕР.")
+        print("[3] ВЫХОД.")
+        print()
+        number = input(Style.BRIGHT + Fore.BLUE + "Введите номер пункта: " + Style.RESET_ALL)
+        if int(number) in (1, 2):
+            try:
+                get("http://google.com")
+            except ConnectionError:
+                print()
+                print(Style.BRIGHT + Fore.RED + "[*] Нет подключения к интернету" + Style.RESET_ALL)
+                print()
+                exit()
+            check_version()
+        if number == "1":
+            sms_spam()
+        elif number == "2":
+            update()
+        elif number == "3":
             print()
             exit()
-    if int(number) in (1, 2):
-        check_version()
-    if number == "1":
-        sms_spam()
-    elif number == "2":
-        update()
-    elif number == "3":
-        print()
-        exit()
-    else:
-        print()
-        print(Style.BRIGHT + Fore.RED + "[*] Номер пункта введён неверно" + Style.RESET_ALL)
-        sleep(1)
-        main()
+        else:
+            print()
+            print(Style.BRIGHT + Fore.RED + "[*] Номер пункта введён неверно" + Style.RESET_ALL)
+            sleep(1)
+            main()
 
 
 def sms_spam():
@@ -56,6 +60,10 @@ def sms_spam():
     print("Введите телефон")
     phone = input(Style.BRIGHT + Fore.BLUE + "spammer >> " + Style.RESET_ALL)
     phone = parse_phone(phone)
+    start_sms_spam(phone)
+
+
+def start_sms_spam(phone):
     name = ""
     for _ in range(12):
         name = name + choice("123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")
@@ -63,6 +71,7 @@ def sms_spam():
         email = name + "@gmail.com"
     phone9 = phone[1:]
     user_agent = UserAgent().random
+    proxies = generate_proxy()
     banner()
     print("Телефон: " + Style.BRIGHT + Fore.BLUE + phone + Style.RESET_ALL)
     print("Спамер запущен.")
@@ -988,6 +997,13 @@ def parse_phone(phone):
         main()
 
 
+def generate_proxy():
+    proxy = get("https://gimmeproxy.com/api/getProxy?curl=true&protocol=http&supportsHttps=true").text
+    if "limit" in proxy:
+        pass
+    return {"http": proxy, "https": proxy}
+
+
 def format_phone(phone, phone_mask):
     if len(phone) == phone_mask.count("#"):
         phone_list = list(phone)
@@ -997,7 +1013,7 @@ def format_phone(phone, phone_mask):
 
 
 def check_version():
-    current_version = "2.2"
+    current_version = "2.3"
     version = get("https://raw.githubusercontent.com/cludeex/spammer/master/version.txt").text
     if float(current_version) < float(version):
         print()
