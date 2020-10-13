@@ -32,18 +32,12 @@ def main():
         print("[3] ВЫХОД.")
         print()
         number = input(Style.BRIGHT + Fore.BLUE + "Введите номер пункта: " + Style.RESET_ALL)
-        if int(number) in (1, 2):
-            try:
-                get("http://google.com")
-            except ConnectionError:
-                print()
-                print(Style.BRIGHT + Fore.RED + "[*] Нет подключения к интернету" + Style.RESET_ALL)
-                print()
-                exit()
-            check_version()
         if number == "1":
+            check_connection()
+            check_version()
             sms_spam()
         elif number == "2":
+            check_connection()
             update()
         elif number == "3":
             print()
@@ -1010,6 +1004,17 @@ def format_phone(phone, phone_mask):
         for i in phone_list:
             phone_mask = phone_mask.replace("#", i, 1)
         return phone_mask
+
+
+def check_connection():
+    try:
+        get("http://google.com")
+    except ConnectionError:
+        print()
+        print(Style.BRIGHT + Fore.RED + "[*] Нет подключения к интернету" + Style.RESET_ALL)
+        print()
+        exit()
+    return
 
 
 def check_version():
