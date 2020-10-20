@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 from os import name, system
 from random import choice, randint
 from sys import argv
@@ -6,7 +6,6 @@ from time import sleep
 from colorama import Fore, Style
 from fake_useragent import UserAgent
 from requests import get, post
-from requests.exceptions import ConnectionError
 
 
 def banner():
@@ -33,11 +32,8 @@ def main():
         print()
         number = input(Style.BRIGHT + Fore.BLUE + "Введите номер пункта: " + Style.RESET_ALL)
         if number == "1":
-            check_connection()
-            check_version()
             sms_spam()
         elif number == "2":
-            check_connection()
             update()
         elif number == "3":
             print()
@@ -50,6 +46,8 @@ def main():
 
 
 def sms_spam():
+    check_internet()
+    check_version()
     banner()
     print("Введите телефон")
     phone = input(Style.BRIGHT + Fore.BLUE + "spammer >> " + Style.RESET_ALL)
@@ -69,7 +67,8 @@ def start_sms_spam(phone):
     banner()
     print("Телефон: " + Style.BRIGHT + Fore.BLUE + phone + Style.RESET_ALL)
     print("Спамер запущен.")
-    print("Чтобы остановить - нажмите Ctrl+Z")
+    print()
+    print(Style.BRIGHT + Fore.RED + "[*] Ctrl + Z для выхода." + Style.RESET_ALL)
     while True:
         try:
             formatted_phone = format_phone(phone, "+# (###) ###-##-##")
@@ -1006,10 +1005,10 @@ def format_phone(phone, phone_mask):
         return phone_mask
 
 
-def check_connection():
+def check_internet():
     try:
         get("http://google.com")
-    except ConnectionError:
+    except:
         print()
         print(Style.BRIGHT + Fore.RED + "[*] Нет подключения к интернету" + Style.RESET_ALL)
         print()
@@ -1029,6 +1028,7 @@ def check_version():
 
 
 def update():
+    check_internet()
     banner()
     print("Вы уверены, что хотите обновить? (y/n)")
     update = input(Style.BRIGHT + Fore.BLUE + "spammer >> " + Style.RESET_ALL)
