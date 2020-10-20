@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 clear
 cd ~/spammer
 if [ -e  /usr/lib/sudo ]
