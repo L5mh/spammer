@@ -1,7 +1,8 @@
 # Установка
-$ <code>pkg install git</code><br>
+$ <code>apt-get install git</code><br>
 $ <code>git clone https://github.com/cludeex/spammer</code><br>
-$ <code>sh ~/spammer/install.sh</code><br>
+$ <code>cd spammer</code><br>
+$ <code>sh install.sh</code><br>
 # Запуск
 $ <code>spammer</code><br>
 # Лицензия
