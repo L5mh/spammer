@@ -1,5 +1,5 @@
 # Установка
-$ <code>apt-get install git</code><br>
+$ <code>apt install git</code><br>
 $ <code>git clone https://github.com/cludeex/spammer</code><br>
 $ <code>cd spammer</code><br>
 $ <code>sh install.sh</code><br>
