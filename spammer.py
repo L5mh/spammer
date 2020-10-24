@@ -56,15 +56,13 @@ def start_spam(phone):
         return phone_mask
 
     name = ""
-    password = ""
-    email = ""
     for _ in range(12):
         name = name + choice("123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")
         password = name + choice("123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")
         email = name + "@gmail.com"
     phone9 = phone[1:]
     user_agent = UserAgent().random
-    proxies = get_proxy()
+    proxies = generate_proxy()
     banner()
     print(f"Телефон: {Style.BRIGHT}{Fore.BLUE}{phone}{Style.RESET_ALL}")
     print(f"Спамер запущен.")
@@ -989,7 +987,7 @@ def parse_phone(phone):
         main()
 
 
-def get_proxy():
+def generate_proxy():
     proxy = get("https://gimmeproxy.com/api/getProxy?curl=true&protocol=http&supportsHttps=true").text
     return {"http": proxy, "https": proxy}
 
