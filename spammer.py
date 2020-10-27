@@ -1017,7 +1017,7 @@ def check_version():
 def update():
     check_internet()
     banner()
-    print("Вы уверены, что хотите обновить? (y/n)")
+    print("Вы уверены, что хотите обновить? [Y/n]")
     update = input(f"{Style.BRIGHT}{Fore.BLUE}spammer >> {Style.RESET_ALL}")
     if update.lower() == "y":
         system("cls" if name == "nt" else "clear")
