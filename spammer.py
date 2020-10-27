@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from os import name, system
+from os.path import exists, isfile
 from random import choice, randint
 from time import sleep
 from colorama import Fore, Style
@@ -24,7 +25,8 @@ def main():
     print("[1] СМС СПАМЕР.")
     print("[2] ОБНОВИТЬ СПАМЕР.")
     print("[3] ВЫХОД.")
-    number = input(f"\n{Style.BRIGHT}{Fore.BLUE}Введите номер пункта: {Style.RESET_ALL}")
+    print()
+    number = input(f"{Style.BRIGHT}{Fore.BLUE}Введите номер пункта: {Style.RESET_ALL}")
     if number == "1":
         spam_handler()
     elif number == "2":
@@ -994,15 +996,16 @@ def generate_proxy():
 
 def check_internet():
     try:
-        get("http://google.com", verify=True)
+        get("http://google.com", timeout=1)
     except Exception:
-        print(f"\n{Style.BRIGHT}{Fore.RED}[*] Нет подключения к интернету{Style.RESET_ALL}\n")
-        exit()
+        print(f"\n{Style.BRIGHT}{Fore.RED}[*] Нет подключения к интернету{Style.RESET_ALL}")
+        sleep(1)
+        main()
     return
 
 
 def check_version():
-    version = "2.4"
+    version = "2.5"
     if float(version) < float(get("https://raw.githubusercontent.com/cludeex/spammer/master/version.txt").text):
         print(f"\n{Style.BRIGHT}{Fore.RED}[*] Версия устарела и нуждается в обновлении!{Style.RESET_ALL}")
         sleep(2)
@@ -1012,13 +1015,25 @@ def check_version():
 
 
 def update():
+    check_internet()
     banner()
     print("Вы уверены, что хотите обновить? (y/n)")
     update = input(f"{Style.BRIGHT}{Fore.BLUE}spammer >> {Style.RESET_ALL}")
     if update.lower() == "y":
         system("cls" if name == "nt" else "clear")
-        system("cd && rm -rf spammer && git clone https://github.com/cludeex/spammer && cd spammer && sh install.sh")
-        exit()
+        spammer = "https://raw.githubusercontent.com/cludeex/spammer/master/spammer.py"
+        if exists("/usr/bin") and isfile("/usr/bin/spammer"):
+            file = open("/usr/bin/spammer", "wb")
+        elif exists("/usr/local/bin/") and isfile("/usr/local/bin/spammer"):
+            file = open("/usr/local/bin/spammer", "wb")
+        elif exists("/data/data/com.termux/files/usr/bin") and isfile("/data/data/com.termux/files/usr/bin/spammer"):
+            file = open("/data/data/com.termux/files/usr/bin/spammer", "wb")
+        try:
+            file.write(get(spammer).content)
+            file.close()
+            system("spammer")
+        except UnboundLocalError:
+            system("cd $HOME && rm -rf spammer && git clone https://github.com/cludeex/spammer && cd spammer && sh install")
     else:
         main()
 
