@@ -5,7 +5,7 @@
 $ `apt install git`<br>
 $ `git clone https://github.com/cludeex/spammer`<br>
 $ `cd spammer`<br>
-$ `sh install`<br>
+$ `sh install.sh`<br>
 # Запуск
 $ `spammer`<br>
 # Лицензия
