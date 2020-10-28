@@ -1017,9 +1017,9 @@ def check_version():
 def update():
     check_internet()
     banner()
-    print("Вы уверены, что хотите обновить? [Y/n]")
+    print("Вы уверены, что хотите обновить? (y/n)")
     update = input(f"{Style.BRIGHT}{Fore.BLUE}spammer >> {Style.RESET_ALL}")
-    if update.lower() == "y":
+    if update.lower() in ("y", "yes", "1"):
         system("cls" if name == "nt" else "clear")
         spammer = "https://raw.githubusercontent.com/cludeex/spammer/master/spammer.py"
         if exists("/usr/bin") and isfile("/usr/bin/spammer"):
@@ -1033,7 +1033,7 @@ def update():
             file.close()
             system("spammer")
         except UnboundLocalError:
-            system("cd $HOME && rm -rf spammer && git clone https://github.com/cludeex/spammer && cd spammer && sh install.sh")
+            system("cd $HOME && rm -rf spammer && git clone https://github.com/cludeex/spammer && cd spammer && sh install")
     else:
         main()
 
