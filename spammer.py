@@ -20,6 +20,7 @@ def banner():
     print(Style.RESET_ALL)
 
 
+
 def main():
     banner()
     print("[1] СМС СПАМЕР.")
@@ -35,8 +36,8 @@ def main():
         print()
         exit()
     else:
-        print(f"\n{Style.BRIGHT}{Fore.RED}[*] Номер пункта введён неверно{Style.RESET_ALL}")
-        sleep(1)
+        print(f"\n{Style.BRIGHT}{Fore.RED}[*] Номер пункта введён неверно!{Style.RESET_ALL}")
+        sleep(2)
         main()
 
 
@@ -46,7 +47,14 @@ def spam_handler():
     banner()
     print("Введите номер телефона")
     phone = input(f"{Style.BRIGHT}{Fore.BLUE}spammer >> {Style.RESET_ALL}")
+    if phone == "":
+        main()
     phone = parse_phone(phone)
+    banner()
+    print("Телефон: " + Style.BRIGHT + Fore.BLUE + phone + Style.RESET_ALL)
+    print("Спамер запущен")
+    print()
+    print(Style.BRIGHT + Fore.RED + "[*] Ctrl+Z для остановки" + Style.RESET_ALL)
     start_spam(phone)
 
 
@@ -65,10 +73,6 @@ def start_spam(phone):
     phone9 = phone[1:]
     user_agent = UserAgent().random
     proxies = generate_proxy()
-    banner()
-    print(f"Телефон: {Style.BRIGHT}{Fore.BLUE}{phone}{Style.RESET_ALL}")
-    print(f"Спамер запущен.")
-    print(f"\n{Style.BRIGHT}{Fore.RED}[!] Ctrl+Z для остановки.{Style.RESET_ALL}")
     while True:
         try:
             formatted_phone = format_phone(phone, "+# (###) ###-##-##")
@@ -972,21 +976,18 @@ def start_spam(phone):
 
 
 def parse_phone(phone):
-    if phone != "":
-        if phone[0] == "+":
-            phone = phone[1:]
-        elif phone[0] == "8":
-            phone = "7" + phone[1:]
-        elif phone[0] == "9":
-            phone = "7" + phone
-        if len(phone) in (10, 11, 12) and (phone[:2] == "79" or phone[:2] == "77" or phone[:3] == "380" or phone[:3] == "375"):
-            return phone
-        else:
-            print(f"\n{Style.BRIGHT}{Fore.RED}[*] Номер телефона введён неверно{Style.RESET_ALL}")
-            sleep(1)
-            spam_handler()
+    if phone[0] == "+":
+        phone = phone[1:]
+    elif phone[0] == "8":
+        phone = "7" + phone[1:]
+    elif phone[0] == "9":
+        phone = "7" + phone
+    if phone[:2] in ["79", "77"] and len(phone) == 11 or phone[:3] in ["380", "375"] and len(phone) == 12:
+        return phone
     else:
-        main()
+        print(f"\n{Style.BRIGHT}{Fore.RED}[*] Номер телефона введён неверно!{Style.RESET_ALL}")
+        sleep(2)
+        spam_handler()
 
 
 def generate_proxy():
@@ -998,14 +999,14 @@ def check_internet():
     try:
         get("http://google.com", timeout=1)
     except Exception:
-        print(f"\n{Style.BRIGHT}{Fore.RED}[*] Нет подключения к интернету{Style.RESET_ALL}")
-        sleep(1)
+        print(f"\n{Style.BRIGHT}{Fore.RED}[*] Нет подключения к интернету!{Style.RESET_ALL}")
+        sleep(2)
         main()
     return
 
 
 def check_version():
-    version = "2.5"
+    version = "2.6"
     if float(version) < float(get("https://raw.githubusercontent.com/cludeex/spammer/master/version.txt").text):
         print(f"\n{Style.BRIGHT}{Fore.RED}[*] Версия устарела и нуждается в обновлении!{Style.RESET_ALL}")
         sleep(2)
@@ -1019,7 +1020,7 @@ def update():
     banner()
     print("Вы уверены, что хотите обновить? (y/n)")
     update = input(f"{Style.BRIGHT}{Fore.BLUE}spammer >> {Style.RESET_ALL}")
-    if update.lower() in ("y", "yes", "1"):
+    if update.lower() == "y":
         system("cls" if name == "nt" else "clear")
         spammer = "https://raw.githubusercontent.com/cludeex/spammer/master/spammer.py"
         if exists("/usr/bin") and isfile("/usr/bin/spammer"):
