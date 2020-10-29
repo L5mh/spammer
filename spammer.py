@@ -51,15 +51,18 @@ def spam_handler():
     phone = parse_phone(phone)
     print()
     print("Введите кол-во потоков")
-    threads = int(input(f"{BRIGHT}{BLUE}spammer >> {RESET_ALL}"))
+    threads = input(f"{BRIGHT}{BLUE}spammer >> {RESET_ALL}")
     banner()
-    print("Телефон: " + BRIGHT + BLUE + phone + RESET_ALL)
+    print(f"Телефон: {BRIGHT}{BLUE}{phone}{RESET_ALL}")
     print("Спамер запущен")
     print()
-    print(BRIGHT + RED + "[*] Ctrl+Z для остановки" + RESET_ALL)
-    for _ in range(threads):
-        x = Thread(target=start_spam, args=(phone,))
-        x.start()
+    print(f"{BRIGHT}{RED}[*] Ctrl+Z для остановки" + RESET_ALL)
+    if threads in ["", "1"]:
+        start_spam(phone)
+    else:
+        for _ in range(int(threads)):
+            x = Thread(target=start_spam, args=(phone,))
+            x.start()
 
 
 def start_spam(phone):
