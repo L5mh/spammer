@@ -47,22 +47,23 @@ def spam_handler():
     banner()
     print("Введите номер телефона")
     phone = input(f"{BRIGHT}{BLUE}spammer >> {RESET_ALL}")
-    if phone == "": main()
     phone = parse_phone(phone)
     print()
     print("Введите кол-во потоков")
     threads = input(f"{BRIGHT}{BLUE}spammer >> {RESET_ALL}")
-    banner()
-    print(f"Телефон: {BRIGHT}{BLUE}{phone}{RESET_ALL}")
-    print("Спамер запущен")
-    print()
-    print(f"{BRIGHT}{RED}[*] Ctrl+Z для остановки" + RESET_ALL)
-    if threads in ["", "1"]:
-        start_spam(phone)
-    else:
+    if threads in ["", "0", "1"]: threads = "1"
+    try:
         for _ in range(int(threads)):
-            x = Thread(target=start_spam, args=(phone,))
-            x.start()
+            Thread(target=start_spam, args=(phone,)).start()
+        banner()
+        print(f"Телефон: {BRIGHT}{BLUE}{phone}{RESET_ALL}")
+        print("Спамер запущен")
+        print()
+        print(f"{BRIGHT}{RED}[*] Ctrl+Z для остановки{RESET_ALL}")
+    except ValueError:
+        print(f"\n{BRIGHT}{RED}[*] Кол-во потоков введено неверно!{RESET_ALL}")
+        sleep(1)
+        spam_handler()
 
 
 def start_spam(phone):
@@ -959,18 +960,21 @@ def start_spam(phone):
 
 
 def parse_phone(phone):
-    if phone[0] == "+":
-        phone = phone[1:]
-    elif phone[0] == "8":
-        phone = "7" + phone[1:]
-    elif phone[0] == "9":
-        phone = "7" + phone
-    if phone[:2] in ["79", "77"] and len(phone) == 11 or phone[:3] in ["380", "375"] and len(phone) == 12:
-        return phone
+    if phone != "":
+        if phone[0] == "+":
+            phone = phone[1:]
+        elif phone[0] == "8":
+            phone = "7" + phone[1:]
+        elif phone[0] == "9":
+            phone = "7" + phone
+        if phone[:2] in ["79", "77"] and len(phone) == 11 or phone[:3] in ["380", "375"] and len(phone) == 12:
+            return phone
+        else:
+            print(f"\n{BRIGHT}{RED}[*] Номер телефона введён неверно!{RESET_ALL}")
+            sleep(1)
+            spam_handler()
     else:
-        print(f"\n{BRIGHT}{RED}[*] Номер телефона введён неверно!{RESET_ALL}")
-        sleep(1)
-        spam_handler()
+        main()
 
 
 def generate_proxy():
@@ -1016,7 +1020,7 @@ def update():
             file.close()
             system("spammer")
         except UnboundLocalError:
-            system("cd $HOME && rm -rf spammer && git clone https://github.com/cludeex/spammer && cd spammer && sh install")
+            system("cd $HOME && rm -rf spammer && git clone https://github.com/cludeex/spammer && cd spammer && sh install.sh")
     else:
         main()
 
