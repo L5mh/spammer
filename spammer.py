@@ -711,6 +711,7 @@ def update():
     update = input(f"{BRIGHT}{BLUE}spammer >> {RESET_ALL}")
     if update.lower() == "y":
         system("cls" if name == "nt" else "clear")
+        system("pip3 install user_agent")
         if exists("/usr/bin") and isfile("/usr/bin/spammer"):
             file = open("/usr/bin/spammer", "wb")
         elif exists("/usr/local/bin/") and isfile("/usr/local/bin/spammer"):
